@@ -84,12 +84,15 @@
     <Compile Include="src\Frontend2.Parser\VendingMachineConstants.cs" />
     <Compile Include="src\Frontend2.Parser\VendingMachineParser.cs" />
     <Compile Include="src\Frontend2.Parser\VendingMachineTokenizer.cs" />
+    <Compile Include="src\Frontend2.Software\SoftwareCoinRacks.cs" />
+    <Compile Include="src\Frontend2.Software\SoftwarePop.cs" />
     <Compile Include="src\Frontend2\Coin.cs" />
     <Compile Include="src\Frontend2\IDeliverable.cs" />
     <Compile Include="src\Frontend2\IVendingMachineFactory.cs" />
     <Compile Include="src\Frontend2\PopCan.cs" />
     <Compile Include="src\ScriptProcessor.cs" />
     <Compile Include="src\VendingMachineFactory.cs" />
+    <Compile Include="src\Frontend2.Software\VendingMachineSoftware.cs" />
     <Compile Include="src\VendingMachineStoredContents.cs" />
   </ItemGroup>
   <ItemGroup>
