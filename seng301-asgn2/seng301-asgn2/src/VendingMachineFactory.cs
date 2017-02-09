@@ -27,11 +27,23 @@ public class VendingMachineFactory : IVendingMachineFactory {
     public void LoadCoins(int vmIndex, int coinKindIndex, List<Coin> coins) {
         Console.WriteLine("VM: Loading coins..");
         VendingMachine machine = getMachineById(vmIndex);
-        // how to load coins??
+        // create array of length the desired index
+        int[] coinArray = new int[coinKindIndex];
+        // set that index value to the number of coins in list
+        coinArray[coinKindIndex] = coins.Count;
+        // load coins into machine
+        machine.LoadCoins(coinArray);
     }
 
     public void LoadPops(int vmIndex, int popKindIndex, List<PopCan> pops) {
-        // TODO: Implement
+        Console.WriteLine("VM: Loading pops..");
+        VendingMachine machine = getMachineById(vmIndex);
+        // create array of length the desired index
+        int[] popArray = new int[popKindIndex];
+        // set that index value to the number of pops in list
+        popArray[popKindIndex] = pops.Count;
+        // load pops into machine
+        machine.LoadPopCans(popArray);
     }
 
     public void InsertCoin(int vmIndex, Coin coin) {
