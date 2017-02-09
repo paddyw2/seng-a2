@@ -25,12 +25,20 @@ public class VendingMachineFactory : IVendingMachineFactory {
     }
 
     public void LoadCoins(int vmIndex, int coinKindIndex, List<Coin> coins) {
-        Console.WriteLine("VM: Loading coins..");
+        Console.WriteLine("VM: Loading coins...");
         VendingMachine machine = getMachineById(vmIndex);
-        // create array of length the desired index
-        int[] coinArray = new int[coinKindIndex];
+        // create array of length equal to coin rack size
+        CoinRack[] coinRacks = machine.CoinRacks;
+        int length = coinRacks.Length;
+        int[] coinArray = new int[length];
         // set that index value to the number of coins in list
-        coinArray[coinKindIndex] = coins.Count;
+        try
+        {
+            coinArray[coinKindIndex] = coins.Count;
+        } catch (Exception e)
+        {
+            Console.WriteLine("Invalid coin index - larger than number of slots: " + coinKindIndex);
+        }
         // load coins into machine
         machine.LoadCoins(coinArray);
     }
@@ -39,28 +47,37 @@ public class VendingMachineFactory : IVendingMachineFactory {
         Console.WriteLine("VM: Loading pops..");
         VendingMachine machine = getMachineById(vmIndex);
         // create array of length the desired index
-        int[] popArray = new int[popKindIndex];
+        PopCanRack[] popRacks = machine.PopCanRacks;
+        int length = popRacks.Length;
+        int[] popArray = new int[length];
         // set that index value to the number of pops in list
-        popArray[popKindIndex] = pops.Count;
+        try
+        {
+            popArray[popKindIndex] = pops.Count;
+        } catch (Exception e)
+        {
+            Console.WriteLine("Invalid pop index - larger than number of slots: " + popKindIndex);
+        }
         // load pops into machine
         machine.LoadPopCans(popArray);
     }
 
     public void InsertCoin(int vmIndex, Coin coin) {
-        // TODO: Implement
+        Console.WriteLine("VM: Inserting coins...");
     }
 
     public void PressButton(int vmIndex, int value) {
-        // TODO: Implement
+        Console.WriteLine("VM: Pressing button...");
+
     }
 
     public List<IDeliverable> ExtractFromDeliveryChute(int vmIndex) {
-        // TODO: Implement
+        Console.WriteLine("VM: Extracting...");
         return new List<IDeliverable>();
     }
 
     public VendingMachineStoredContents UnloadVendingMachine(int vmIndex) {
-        // TODO: Implement
+        Console.WriteLine("VM: Unloading...");
         return new VendingMachineStoredContents();
     }
 
