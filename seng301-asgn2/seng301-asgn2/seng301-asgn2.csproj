@@ -86,6 +86,7 @@
     <Compile Include="src\Frontend2.Parser\VendingMachineTokenizer.cs" />
     <Compile Include="src\Frontend2.Software\SoftwareCoinRacks.cs" />
     <Compile Include="src\Frontend2.Software\SoftwarePop.cs" />
+    <Compile Include="src\Frontend2.Software\StoredContents.cs" />
     <Compile Include="src\Frontend2\Coin.cs" />
     <Compile Include="src\Frontend2\IDeliverable.cs" />
     <Compile Include="src\Frontend2\IVendingMachineFactory.cs" />
