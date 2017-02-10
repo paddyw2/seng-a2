@@ -99,8 +99,13 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="test-scripts\T01-good-script" />
+    <None Include="test-scripts\T02-good-script2" />
+    <None Include="test-scripts\T05-good-script5" />
     <None Include="test-scripts\U01-bad-script1" />
     <None Include="test-scripts\U02-bad-script2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="test-scripts\ScriptReadMe.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

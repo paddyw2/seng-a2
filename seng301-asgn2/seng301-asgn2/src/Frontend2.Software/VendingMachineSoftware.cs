@@ -49,6 +49,8 @@ public class VendingMachineSoftware
 
     public void configure(List<string> popNames, List<int> popCosts)
     {
+        // reset list in case of reconfiguring
+        pops.Clear();
         int counter = 0;
         foreach (string name in popNames)
         {
