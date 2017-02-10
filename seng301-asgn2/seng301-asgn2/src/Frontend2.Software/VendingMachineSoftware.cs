@@ -62,42 +62,38 @@ public class VendingMachineSoftware
 
     public void loadCoins(int coinKindIndex, List<Coin> coins)
     {
-        SoftwareCoinRacks rack = new SoftwareCoinRacks(coinKinds[coinKindIndex], coins.Count);
-        softwareRacks.Add(rack);
-        // create array of length equal to coin rack size
-        CoinRack[] coinRacks = vendingHardware.CoinRacks;
-        int length = coinRacks.Length;
-        int[] coinArray = new int[length];
-        // set that index value to the number of coins in list
+        // load in software
+        SoftwareCoinRacks newRack = new SoftwareCoinRacks(coinKinds[coinKindIndex], coins.Count);
+        softwareRacks.Add(newRack);
+        // load in hardware
+        CoinRack[] racks = vendingHardware.CoinRacks;
+        CoinRack coinRack = null;
         try
         {
-            coinArray[coinKindIndex] = coins.Count;
+            coinRack = racks[coinKindIndex];
         } catch (Exception e)
         {
-            Console.WriteLine("Invalid coin index - larger than number of slots: " + coinKindIndex);
+            Console.WriteLine("Invalid coin kind index");
         }
-        // load coins into machine
-        vendingHardware.LoadCoins(coinArray);
+        coinRack.LoadCoins(coins);
+        Console.WriteLine("Load: " + coinKinds[coinKindIndex]);
     }
 
 
 
     public void loadPops(int popKindIndex, List<PopCan> pops)
     {
-        // create array of length the desired index
-        PopCanRack[] popRacks = vendingHardware.PopCanRacks;
-        int length = popRacks.Length;
-        int[] popArray = new int[length];
-        // set that index value to the number of pops in list
+        // load in hardware
+        PopCanRack[] racks = vendingHardware.PopCanRacks;
+        PopCanRack popRack = null;
         try
         {
-            popArray[popKindIndex] = pops.Count;
+            popRack = racks[popKindIndex];
         } catch (Exception e)
         {
-            Console.WriteLine("Invalid pop index - larger than number of slots: " + popKindIndex);
+            Console.WriteLine("Invalid pop kind index");
         }
-        // load pops into machine
-        vendingHardware.LoadPopCans(popArray);
+        popRack.LoadPops(pops);
     }
 
     public void insertCoin(Coin coin)
@@ -262,7 +258,7 @@ public class VendingMachineSoftware
         }
         contents.setCoinList(coinRackCoins);
         // storage coins
-        CoinReceptacle recep = vendingHardware.CoinReceptacle;
+        CoinReceptacle recep = vendingHardware.StorageBin;
         List<Coin> recepCoins = recep.Unload();
         contents.setStorageList(recepCoins);
         // pops
