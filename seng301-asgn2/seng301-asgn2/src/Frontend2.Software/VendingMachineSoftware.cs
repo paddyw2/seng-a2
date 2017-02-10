@@ -36,7 +36,7 @@ public class VendingMachineSoftware
         pops = new List<SoftwarePop>();
         softwareRacks = new List<SoftwareCoinRacks>();
         insertedAmount = 0;
-        // handlers
+        // set up handlers
         CoinSlot coinSlot = vendingHardware.CoinSlot;
         coinSlot.CoinRejected += new EventHandler<CoinEventArgs>(printCoinRejected);
         coinSlot.CoinAccepted += new EventHandler<CoinEventArgs>(printCoinAccepted);
@@ -79,8 +79,6 @@ public class VendingMachineSoftware
         Console.WriteLine("Load: " + coinKinds[coinKindIndex]);
     }
 
-
-
     public void loadPops(int popKindIndex, List<PopCan> pops)
     {
         // load in hardware
@@ -115,128 +113,135 @@ public class VendingMachineSoftware
         }
         // press button
         chosenButton.Press();
-        // now button is pressed, check if valid
-        // need inserted money, pop name/type, change needed
-        // enough money inserted, enough pop etc.
 
-        // get price
+        // now button is pressed, process action
+
+        // get price and name of chosen pop
         SoftwarePop pop = pops[button];
         int price = pop.getCost();
         string name = pop.getName();
         Console.WriteLine("Requested: " + name + ":" + price);
+        PopCanRack[] racks = vendingHardware.PopCanRacks;
 
         // check if enough money inserted
-        if (insertedAmount >= price)
+        if (insertedAmount >= price && racks[button].Count > 0)
         {
             // dispense pop
-            PopCanRack[] racks = vendingHardware.PopCanRacks;
             racks[button].DispensePopCan();
             // take money into machine from receptacle
             CoinReceptacle recep = vendingHardware.CoinReceptacle;
             recep.StoreCoins();
             // calculate and dispense change
             int change = insertedAmount - price;
-
-            /* Change Algorithm */
-            // change algorithm from A1 (slightly modified)
-            int val = change;
-            int upperBound = val + 1;
-
-            int largestCoinVal = 0;
-            // loop change process until either
-            // no more valid coins, or change
-            // value is met (where the loop will
-            // be broken)
-            while (true)
-            {
-                // loop through coin slots to find
-                // next denomination
-                // if found, sets the largestSlot
-                // to a Coin, which has a value
-
-                SoftwareCoinRacks largestSlot = null;
-                int slotIndex = 0;
-                int counter = 0;
-                foreach (SoftwareCoinRacks slot in softwareRacks)
-                {
-                    int rackValue = slot.getValue();
-                    if( rackValue >= largestCoinVal && rackValue < upperBound)
-                    {
-                        largestCoinVal = rackValue;
-                        largestSlot = slot;
-                        slotIndex = counter;
-                    }
-                    counter++;
-                }
-
-                // check if largest coin is null
-                // if so, then we have not found
-                // a suitable change coin (we will
-                // short change them)
-                if (largestSlot == null)
-                    break;
-
-                // now we have next largest coin
-                // decrease until target met, each
-                // time removing a coin from the
-                // coin slot, and adding it to the
-                // coin change list
-
-                bool runLoop = true;
-                bool changeFinished = false;
-                while (runLoop && largestSlot.getQuantity() > 0)
-                {
-                    // decrement change total by coin
-                    // denomination
-                    val = val - largestCoinVal;
-                    if (val >= 0)
-                    {
-                        // returned coin may be "incorrect" if the
-                        // slot was loaded incorrectly - this is
-                        // the desired functionality
-                        CoinRack[] coinRacks = vendingHardware.CoinRacks;
-                        // release coin in hardware and in software
-                        coinRacks[slotIndex].ReleaseCoin();
-                        largestSlot.decQuantity();
-                        Console.WriteLine("Dispensing coin: " + largestCoinVal);
-
-                        // if new change value is zero, all change
-                        // has been added to the coin change list
-                        // so terminate loop
-                        if (val == 0)
-                        {
-                            runLoop = false;
-                            changeFinished = true;
-                        }
-                    }
-                    else
-                    {
-                        // if change value is negative, reverse
-                        // last decrement and move to lower
-                        // denomination
-                        val = val + largestCoinVal;
-                        runLoop = false;
-                    }
-                }
-
-                // if change finished flag is set, then
-                // exit main loop
-                if (changeFinished)
-                    break;
-
-                // else, reset variables and start next
-                // loop to find lower denomination
-                upperBound = largestCoinVal;
-                largestCoinVal = 0;
-            }
-
+            dispenseChange(change);
             // reset inserted amount
             insertedAmount = 0;
         } else
         {
-            Console.WriteLine("Not enough money entered");
+            if(racks[button].Count > 0)
+                Console.WriteLine("Not enough money entered");
+            else
+                Console.WriteLine("Not enough pop");
         }
    }
+
+    public void dispenseChange(int change)
+    {
+        /* Change Algorithm */
+        // change algorithm from A1 (slightly modified)
+        int val = change;
+        int upperBound = val + 1;
+
+        int largestCoinVal = 0;
+        // loop change process until either
+        // no more valid coins, or change
+        // value is met (where the loop will
+        // be broken)
+        while (true)
+        {
+            // loop through coin slots to find
+            // next denomination
+            // if found, sets the largestSlot
+            // to a Coin, which has a value
+
+            SoftwareCoinRacks largestSlot = null;
+            int slotIndex = 0;
+            int counter = 0;
+            foreach (SoftwareCoinRacks slot in softwareRacks)
+            {
+                int rackValue = slot.getValue();
+                if( rackValue >= largestCoinVal && rackValue < upperBound)
+                {
+                    largestCoinVal = rackValue;
+                    largestSlot = slot;
+                    slotIndex = counter;
+                }
+                counter++;
+            }
+
+            // check if largest coin is null
+            // if so, then we have not found
+            // a suitable change coin (we will
+            // short change them)
+            if (largestSlot == null)
+                break;
+
+            // now we have next largest coin
+            // decrease until target met, each
+            // time removing a coin from the
+            // coin slot, and adding it to the
+            // coin change list
+
+            bool runLoop = true;
+            bool changeFinished = false;
+            while (runLoop && largestSlot.getQuantity() > 0)
+            {
+                // decrement change total by coin
+                // denomination
+                val = val - largestCoinVal;
+                if (val >= 0)
+                {
+                    // returned coin may be "incorrect" if the
+                    // slot was loaded incorrectly - this is
+                    // the desired functionality
+                    CoinRack[] coinRacks = vendingHardware.CoinRacks;
+                    // release coin in hardware and in software
+                    coinRacks[slotIndex].ReleaseCoin();
+                    largestSlot.decQuantity();
+                    Console.WriteLine("Dispensing coin: " + largestCoinVal);
+
+                    // if new change value is zero, all change
+                    // has been added to the coin change list
+                    // so terminate loop
+                    if (val == 0)
+                    {
+                        runLoop = false;
+                        changeFinished = true;
+                    }
+                }
+                else
+                {
+                    // if change value is negative, reverse
+                    // last decrement and move to lower
+                    // denomination
+                    val = val + largestCoinVal;
+                    runLoop = false;
+                }
+            }
+
+            // if change finished flag is set, then
+            // exit main loop
+            if (changeFinished)
+                break;
+
+            // else, reset variables and start next
+            // loop to find lower denomination
+            upperBound = largestCoinVal;
+            largestCoinVal = 0;
+        }
+
+
+    }
 
     public List<IDeliverable> extractChute()
     {
