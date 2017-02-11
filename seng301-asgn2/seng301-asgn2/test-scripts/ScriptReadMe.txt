@@ -33,3 +33,4 @@ Bad Scripts:
 10. Invalid pop price (negative)
 11. Empty machine parameters
 12. Less pops than slots
+13. If all coin slots and storage bin are full

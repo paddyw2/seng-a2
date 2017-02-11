@@ -59,12 +59,11 @@ public class VendingMachineSoftware
             coinRack.CoinAdded += new EventHandler<CoinEventArgs>(printCoinLoaded);
         }
         PopCanRack[] popRacks = vendingHardware.PopCanRacks;
-
+        // add handler to each pop rack
         foreach (PopCanRack rack in popRacks)
         {
             rack.PopCanRemoved += new EventHandler<PopCanEventArgs>(printPopDispensed);
         }
-
     }
 
     public void configure(List<string> popNames, List<int> popCosts)
@@ -341,6 +340,7 @@ public class VendingMachineSoftware
 
     void printPopDispensed(object sender, PopCanEventArgs e)
     {
-
+        string popName = e.PopCan.Name;
+        Console.WriteLine("Pop dispensed: " + popName);
     }
 }
