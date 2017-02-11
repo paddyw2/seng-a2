@@ -100,7 +100,21 @@
     <None Include="App.config" />
     <None Include="test-scripts\T01-good-script" />
     <None Include="test-scripts\T02-good-script2" />
+    <None Include="test-scripts\T03-good-script3" />
+    <None Include="test-scripts\T04-good-script4" />
     <None Include="test-scripts\T05-good-script5" />
+    <None Include="test-scripts\T06-good-script6" />
+    <None Include="test-scripts\T07-good-script7" />
+    <None Include="test-scripts\T08-good-script8" />
+    <None Include="test-scripts\T09-good-script9" />
+    <None Include="test-scripts\T10-good-script10" />
+    <None Include="test-scripts\T11-good-script11" />
+    <None Include="test-scripts\T12-good-script12" />
+    <None Include="test-scripts\T13-good-script13" />
+    <None Include="test-scripts\T14-good-script14" />
+    <None Include="test-scripts\T15-good-script15" />
+    <None Include="test-scripts\T16-good-script16" />
+    <None Include="test-scripts\T17-good-script17" />
     <None Include="test-scripts\U01-bad-script1" />
     <None Include="test-scripts\U02-bad-script2" />
   </ItemGroup>

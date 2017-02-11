@@ -14,13 +14,11 @@ Good Scripts:
 11. In limbo value after no valid selection made (i.e. 40c inserted) - this value should not be included in teardown
 12. If not enough pop, nothing should happen (still has credit, able to buy another pop)
 13. If not enough money, nothing should happen (still has credit, able to buy another pop)
-14. Short changes due to no change left
-15. Short changes due to invalid denomations (i.e. 33c with only 5c coins)
-16. Short change (no change) due to invalid denomations (i.e. 50c with only 100c coins)
-17. Slot loading is reflected when removing coins, in a queue order (i.e. FIFO)
-18. Slot loading is reflected when removing pops, in a queue order (i.e. FIFO)
-19. Multiple machine instances
-20. If credit in machine on teardown, this is not included on teardown and can be used again when machine re-stocked
+14. If no change left, then inserted money used (as normal) and any discrepancy is left as credit
+15. Credit remaining due to invalid denomations (i.e. 33c with only 5c coins)
+16. Credit remaining (no change given - i.e. full credit) due to invalid denomations (i.e. 50c with only 100c coins)
+17. Multiple machine instances
+18. If credit in machine on teardown, this is not included on teardown and can be used again when machine re-stocked
 
 Bad Scripts:
 1. Default provided script

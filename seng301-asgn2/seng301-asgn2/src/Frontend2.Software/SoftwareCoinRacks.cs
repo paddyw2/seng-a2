@@ -36,4 +36,9 @@ public class SoftwareCoinRacks
     {
         quantity--;
     }
+
+    public void incQuantity(int value)
+    {
+        quantity += value;
+    }
 }

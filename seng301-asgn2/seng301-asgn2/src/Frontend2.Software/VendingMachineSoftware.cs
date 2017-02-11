@@ -35,21 +35,41 @@ public class VendingMachineSoftware
         // default information
         pops = new List<SoftwarePop>();
         softwareRacks = new List<SoftwareCoinRacks>();
+        // create software version of coin racks
+        for(int i=0;i<coinKinds.Count; i++)
+        {
+            SoftwareCoinRacks newCoinRack = new SoftwareCoinRacks(coinKinds[i], 0);
+            softwareRacks.Add(newCoinRack);
+        }
         insertedAmount = 0;
         // set up handlers
         CoinSlot coinSlot = vendingHardware.CoinSlot;
         coinSlot.CoinRejected += new EventHandler<CoinEventArgs>(printCoinRejected);
         coinSlot.CoinAccepted += new EventHandler<CoinEventArgs>(printCoinAccepted);
         SelectionButton[] buttons = vendingHardware.SelectionButtons;
+        // add handler to each button
         foreach(SelectionButton button in buttons)
         {
             button.Pressed += new EventHandler(printButtonPressed);
         }
+        CoinRack[] coinRacks = vendingHardware.CoinRacks;
+        // add handler to each coin rack
+        foreach(CoinRack coinRack in coinRacks)
+        {
+            coinRack.CoinAdded += new EventHandler<CoinEventArgs>(printCoinLoaded);
+        }
+        PopCanRack[] popRacks = vendingHardware.PopCanRacks;
+
+        foreach (PopCanRack rack in popRacks)
+        {
+            rack.PopCanRemoved += new EventHandler<PopCanEventArgs>(printPopDispensed);
+        }
+
     }
 
     public void configure(List<string> popNames, List<int> popCosts)
     {
-        // reset list in case of reconfiguring
+        // reset software list in case of reconfiguring
         pops.Clear();
         int counter = 0;
         foreach (string name in popNames)
@@ -58,15 +78,14 @@ public class VendingMachineSoftware
             pops.Add(pop);
             counter++;
         }
-        
         vendingHardware.Configure(popNames, popCosts);
     }
 
     public void loadCoins(int coinKindIndex, List<Coin> coins)
     {
         // load in software
-        SoftwareCoinRacks newRack = new SoftwareCoinRacks(coinKinds[coinKindIndex], coins.Count);
-        softwareRacks.Add(newRack);
+        SoftwareCoinRacks getRack = softwareRacks[coinKindIndex];
+        getRack.incQuantity(coins.Count);
         // load in hardware
         CoinRack[] racks = vendingHardware.CoinRacks;
         CoinRack coinRack = null;
@@ -78,7 +97,7 @@ public class VendingMachineSoftware
             Console.WriteLine("Invalid coin kind index");
         }
         coinRack.LoadCoins(coins);
-        Console.WriteLine("Load: " + coinKinds[coinKindIndex]);
+        //Console.WriteLine("Load: " + coinKinds[coinKindIndex]);
     }
 
     public void loadPops(int popKindIndex, List<PopCan> pops)
@@ -135,9 +154,11 @@ public class VendingMachineSoftware
             recep.StoreCoins();
             // calculate and dispense change
             int change = insertedAmount - price;
-            dispenseChange(change);
-            // reset inserted amount
-            insertedAmount = 0;
+            int remainingCredit = dispenseChange(change);
+            // reset inserted amount taking into
+            // account any credit
+            insertedAmount = remainingCredit;
+            Console.WriteLine("Remaining credit: " + remainingCredit);
         } else
         {
             if(racks[button].Count > 0)
@@ -147,7 +168,7 @@ public class VendingMachineSoftware
         }
    }
 
-    public void dispenseChange(int change)
+    public int dispenseChange(int change)
     {
         /* Change Algorithm */
         // change algorithm from A1 (slightly modified)
@@ -165,7 +186,6 @@ public class VendingMachineSoftware
             // next denomination
             // if found, sets the largestSlot
             // to a Coin, which has a value
-
             SoftwareCoinRacks largestSlot = null;
             int slotIndex = 0;
             int counter = 0;
@@ -193,7 +213,6 @@ public class VendingMachineSoftware
             // time removing a coin from the
             // coin slot, and adding it to the
             // coin change list
-
             bool runLoop = true;
             bool changeFinished = false;
             while (runLoop && largestSlot.getQuantity() > 0)
@@ -241,8 +260,7 @@ public class VendingMachineSoftware
             upperBound = largestCoinVal;
             largestCoinVal = 0;
         }
-
-
+        return val;
     }
 
     public List<IDeliverable> extractChute()
@@ -288,13 +306,41 @@ public class VendingMachineSoftware
 
     void printCoinAccepted(object sender, CoinEventArgs e)
     {
+        // increment credit amount
         insertedAmount = insertedAmount + e.Coin.Value;
-        Console.WriteLine("Coin slot just accepted this coin: " + e.Coin);
+        //Console.WriteLine("Coin slot just accepted this coin: " + e.Coin);
         Console.WriteLine("Inserted value: " + insertedAmount);
     }
 
     void printButtonPressed(object sender, EventArgs e)
     {
-        Console.WriteLine("Button pressed");
+        //Console.WriteLine("Button pressed");
+    }
+
+    void printCoinLoaded(object sender, CoinEventArgs e)
+    {
+        // this code updates the software understanding of
+        // the coin racks when the receptacle stores its
+        // coins by listening to event, as it may go into
+        // storage bin if coin rack full
+        int coinValue = e.Coin.Value;
+        Console.WriteLine("Coin rack loaded with: " + coinValue);
+        CoinRack rack = (CoinRack) sender;
+        // implement code here to update software coin rack
+        // presume that receptacle always puts coins in right
+        // racks, so the coin value indicates which rack
+        foreach(SoftwareCoinRacks coinRack in softwareRacks)
+        {
+            if(coinRack.getValue() == coinValue)
+            {
+                coinRack.incQuantity(1);
+                break;
+            }
+        }
+    }
+
+    void printPopDispensed(object sender, PopCanEventArgs e)
+    {
+
     }
 }
