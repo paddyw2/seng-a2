@@ -18,7 +18,9 @@ Good Scripts:
 15. Credit remaining due to invalid denomations (i.e. 33c with only 5c coins)
 16. Credit remaining (no change given - i.e. full credit) due to invalid denomations (i.e. 50c with only 100c coins)
 17. Multiple machine instances
-18. If credit in machine on teardown, this is not included on teardown and can be used again when machine re-stocked
+18. If coins in receptacle on teardown, this is not included on teardown and can be used again when machine re-stocked
+19. If credit (but not coins) in machine on teardown, this is not included on teardown and can be used again when machine re-stocked
+20. If coin rack is full, coin receptacle money goes into storage bin and cannot be used for change (also, receptacle coins are stored before change dispensed)
 
 Bad Scripts:
 1. Default provided script
@@ -34,3 +36,4 @@ Bad Scripts:
 11. Empty machine parameters
 12. Less pops than slots
 13. If all coin slots and storage bin are full
+14. Invalid capacity

@@ -115,6 +115,9 @@
     <None Include="test-scripts\T15-good-script15" />
     <None Include="test-scripts\T16-good-script16" />
     <None Include="test-scripts\T17-good-script17" />
+    <None Include="test-scripts\T18-good-script18" />
+    <None Include="test-scripts\T19-good-script19" />
+    <None Include="test-scripts\T20-good-script20" />
     <None Include="test-scripts\U01-bad-script1" />
     <None Include="test-scripts\U02-bad-script2" />
     <None Include="test-scripts\U03-bad-script3" />
@@ -128,6 +131,7 @@
     <None Include="test-scripts\U11-bad-script11" />
     <None Include="test-scripts\U12-bad-script12" />
     <None Include="test-scripts\U13-bad-script13" />
+    <None Include="test-scripts\U14-bad-script14" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="test-scripts\ScriptReadMe.txt" />
