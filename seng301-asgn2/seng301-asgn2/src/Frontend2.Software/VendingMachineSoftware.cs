@@ -271,29 +271,28 @@ public class VendingMachineSoftware
 
     public VendingMachineStoredContents unload()
     {
-        StoredContents contents = new StoredContents();
+        VendingMachineStoredContents contents = new VendingMachineStoredContents();
         // coin rack coins
         CoinRack[] racks = vendingHardware.CoinRacks;
-        List<List<Coin>> coinRackCoins = new List<List<Coin>>();
         foreach(CoinRack rack in racks)
         {
             List<Coin> emptiedCoins = rack.Unload();
-            coinRackCoins.Add(emptiedCoins);
+            contents.CoinsInCoinRacks.Add(emptiedCoins);
         }
-        contents.setCoinList(coinRackCoins);
         // storage coins
         CoinReceptacle recep = vendingHardware.StorageBin;
         List<Coin> recepCoins = recep.Unload();
-        contents.setStorageList(recepCoins);
+        foreach(Coin coin in recepCoins)
+        {
+            contents.PaymentCoinsInStorageBin.Add(coin);
+        }
         // pops
         PopCanRack[] popRacks = vendingHardware.PopCanRacks;
-        List<List<PopCan>> pops = new List<List<PopCan>>();
         foreach(PopCanRack rack in popRacks)
         {
             List<PopCan> emptiedPops = rack.Unload();
-            pops.Add(emptiedPops);
+            contents.PopCansInPopCanRacks.Add(emptiedPops);
         }
-        contents.setPopList(pops);
         return contents;
     }
 
